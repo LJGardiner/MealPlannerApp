@@ -1,0 +1,115 @@
+# 🗂️ Meal Planner Project — Unified Roadmap & Checklist (v6)
+
+**Last Updated:** 21 May 2025  
+**Status:** Actively Maintained  
+**Format:** Check tasks directly by editing this file
+
+---
+
+## ✅ PHASE 0 — Prerequisite Setup
+- [x] SETUP-01 — Initialize Project
+- [x] SETUP-02 — Define Base Directory Structure
+- [x] SETUP-03 — Create Empty Data Files
+- [x] SETUP-04 — Utility Modules
+- [x] SETUP-05 — Styling (Optional)
+
+---
+
+## ✅ PHASE 1 — Core Data Layer & Builder Tools
+- [x] ING-01 — Ingredient Editor
+- [x] ING-02 — Ingredient List & Search
+- [x] ING-03 — Macro Validation Utility
+- [x] REC-01 — Recipe Builder UI
+- [x] REC-02 — Recipe List & Detail View
+- [x] REC-03 — Recipe Macro Calculator
+- [x] MEAL-01 — Meal Builder UI
+- [x] MEAL-02 — Meal List & Component Display
+- [x] MEAL-03 — Meal Macro Calculator
+
+---
+
+## ✅ PHASE 2 — Meal Planner App (Manual Planning)
+- [x] PLAN-01 — Planner Grid UI
+- [x] PLAN-02 — Slot Meal Selector
+- [x] PLAN-03 — Macro Summary Display
+- [x] PLAN-04 — Save & Load Plan
+
+---
+
+## ✅ PHASE 3 — Practical Expansion & Utility
+- [x] GOAL-01 — Set Macro Targets Per Day
+- [x] PLAN-05 — Macro Goal Comparison UI
+- [x] MEAL-04 — Add Smoothie Category
+- [x] DEV-01 — Populate Test Data
+- [x] SHOP-01 — Shopping List Generator
+- [x] AUTO-01 — Auto-Generate Plan From Macro Targets
+
+---
+
+## ✅ PHASE 3B — Validation & Stability
+- [x] FIX-01 — Prevent Duplicate Names for Recipes & Meals
+- [x] FIX-02 — Add Prop Validation
+- [x] FIX-03 — Add Input Validation for Forms
+- [x] FIX-04 — Improve Error Handling on ID Resolution
+- [x] FIX-05 — Macro Target Load on Initial Planner Mount
+
+---
+
+## 🧱 UI COMPONENT STANDARDIZATION ROADMAP
+
+### 🧹 PHASE 0 — Prerequisite Cleanup
+- [ ] CLEAN-01 — Normalize token usage
+- [ ] CLEAN-02 — Remove unstyled raw inputs/buttons
+- [ ] CLEAN-03 — Extract ad-hoc styles
+- [ ] CLEAN-04 — Verify dark mode consistency
+
+### 🏗️ PHASE 1 — Foundation UI Components
+- [ ] UI-01 — Create AppInput.jsx
+- [ ] UI-02 — Create AppButton.jsx
+- [ ] UI-03 — Create AppCard.jsx
+- [ ] UI-04 — Create AppDialog.jsx
+- [ ] UI-05 — Create index.js exporter
+
+### 🔁 PHASE 2 — Progressive Refactor
+- [ ] REF-01 — Replace all <input> with AppInput
+- [ ] REF-02 — Replace all <button> with AppButton
+- [ ] REF-03 — Replace containers with AppCard
+- [ ] REF-04 — Replace modals with AppDialog
+
+### 📊 PHASE 3 — Style Enforcement
+- [ ] STYLE-01 — Add linter rule/comment convention
+- [ ] STYLE-02 — Document visual style guide
+- [ ] STYLE-03 — Snapshot test base components (optional)
+
+---
+
+## 🧪 PHASE 5 — Test Coverage
+- [ ] TEST-01 — Unit Tests for macroUtils.js
+- [ ] TEST-02 — Unit Tests for shoppingUtils.js
+
+---
+
+## 🔌 PHASE 6 — External Integration
+- [ ] ING-04B — Fix Import Ingredient from URL
+- [ ] ING-05A — Manual Paste Parser (Nutrition)
+- [ ] ING-05B — Backend Puppeteer Scraper
+- [ ] ING-05C — Nutrition Engine Abstraction
+
+---
+
+## 🧱 FOUNDATION TASKS
+- [ ] BASE-01 — Add localStorage Namespace Versioning
+
+---
+
+## 🔄 UTILITY TASKS
+- [ ] REPL-01 — Replace Ingredient Across All Recipes and Meals
+
+---
+
+## ☑️ ARCHIVED — Deprecated / Merged Phase 4 Tasks (Completed)
+- [x] UI-02 — Confirmation for Destructive Actions
+- [x] UI-03 — Inline Form Error Feedback
+- [x] UI-04 — Remove Macro Comparison Tab
+- [x] UI-05 — Tailwind Visual Cleanup
+- [x] UI-06 — Theme Setup (Font, Color, Dark Mode)

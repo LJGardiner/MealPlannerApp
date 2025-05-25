@@ -1,22 +1,20 @@
+// tailwind.config.js
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
       colors: {
-        background: '#F9FAFB',
-        'background-dark': '#1F2937',
-        foreground: '#111827',
-        'foreground-dark': '#F9FAFB',
-        card: '#FFFFFF',
-        'card-dark': '#111827',
-        border: '#E5E7EB',
-        'border-dark': '#374151',
-        primary: '#3B82F6',
-        'primary-dark': '#60A5FA',
+        background: 'var(--background)',
+        card: 'var(--card)',
+        foreground: 'var(--foreground)',
+        primary: 'var(--primary)',
+        'border-default': 'var(--border-default)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

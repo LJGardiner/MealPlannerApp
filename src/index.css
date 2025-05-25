@@ -1,7 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* index.css */
 
-html {
-  @apply bg-background text-foreground dark:bg-background-dark dark:text-foreground-dark;
+:root {
+  --background: #F9FAFB;
+  --card: #FFFFFF;
+  --foreground: #111827;
+  --primary: #3B82F6;
+  --border-default: #E5E7EB;
+}
+
+.dark {
+  --background: #1F2937;
+  --card: #111827;
+  --foreground: #F9FAFB;
+  --primary: #60A5FA;
+  --border-default: #374151;
 }

@@ -1,0 +1,153 @@
+# 🎨 Meal Planner App — Component & Visual Style Guide (2025)
+
+**Last Updated:** 25 May 2025  
+**Purpose:** Define clear, consistent, and maintainable UI patterns and standard component design for the Meal Planner App.
+
+---
+
+## 🧱 Design System Foundation
+
+### 🧩 Component Architecture
+All components should follow:
+- **Separation of concerns**: stateless where possible
+- **Consistent props and type validation**
+- **Single source of truth** for styling tokens and UI states
+
+### 📚 Component Layer Types
+| Layer | Purpose |
+|-------|---------|
+| `UI Base` | Reusable atomic units (buttons, inputs, badges) |
+| `UI Block` | Compound elements (cards, modals, forms, tables) |
+| `UI Feature` | Full modules with logic (e.g. IngredientList, RecipeBuilder) |
+
+---
+
+## 🌐 Tailwind + Theme Tokens
+
+### 📌 Base Tailwind Tokens
+| Purpose | Token |
+|--------|-------|
+| Border Radius | `rounded-2xl` |
+| Padding | `p-4 md:p-6` |
+| Shadow | `shadow-md` |
+| Grid Gap | `gap-2 md:gap-4` |
+
+### 🎨 Theme Colors
+| Role | Light | Dark | Token |
+|------|-------|------|-------|
+| Background | `#F9FAFB` | `#1F2937` | `bg-background` |
+| Card | `#FFFFFF` | `#111827` | `bg-card` |
+| Primary | `#3B82F6` | `#60A5FA` | `text-primary` |
+| Text | `#111827` | `#F9FAFB` | `text-foreground` |
+| Border | `#E5E7EB` | `#374151` | `border-default` |
+
+---
+
+## 🖋 Typography
+
+| Element | Size | Weight | Class |
+|---------|------|--------|-------|
+| Heading | `2xl` | Bold | `text-2xl font-bold` |
+| Subhead | `xl` | Semibold | `text-xl font-semibold` |
+| Body | `base` | Normal | `text-base` |
+| Label | `sm` | Medium | `text-sm font-medium` |
+
+Font Stack:
+```js
+fontFamily: {
+  sans: ['Inter', 'system-ui', 'sans-serif'],
+}
+```
+
+---
+
+## 🧩 Standardized Component Patterns
+
+### Buttons
+```jsx
+<Button variant="primary" size="md">Save</Button>
+```
+- Default: `rounded-2xl px-4 py-2 font-semibold`
+- Use `shadcn/ui` with `variant` prop (`primary`, `ghost`, `danger`)
+- Visual feedback for `:hover`, `:disabled`
+
+### Inputs & Forms
+- Use `shadcn/ui` inputs
+- Inline error feedback: `text-red-500 text-sm`
+- Spacing between inputs: `gap-4`
+
+### Cards
+- Base: `rounded-2xl bg-card shadow-md p-4`
+- Max width: `max-w-4xl`
+
+### Modals
+- Centered `Dialog`
+- Padded, full dark/light theming
+- Responsive width (`max-w-lg`)
+
+---
+
+## 🧮 Tables & Lists
+
+### Tables
+- Headers: bold, center-aligned
+- Macros: right-aligned
+- Row striping: `even:bg-gray-50 dark:even:bg-gray-800`
+
+### Lists
+- Use `grid` or `flex` with spacing `gap-4`
+- Items use consistent visual tokens from cards
+
+---
+
+## 💡 Feedback & State Indicators
+
+| Type | Style |
+|------|-------|
+| Success | Green badge `bg-green-500 text-white` |
+| Warning | Yellow badge `bg-yellow-400 text-black` |
+| Error | Red badge `bg-red-500 text-white` |
+| Info | Blue badge `bg-blue-500 text-white` |
+
+---
+
+## 🌒 Dark Mode
+
+- Default: `prefers-color-scheme`
+- All UI elements must use `dark:` variants
+- Provide toggle override via app settings
+
+---
+
+## 📊 Macro & Visual Display
+
+- Use `recharts` for charts
+- Use progress bars to show macro target deltas
+- Color delta badges: ✅ over target, ⚠️ close, ❌ under
+
+---
+
+## 🧩 Component Library
+
+| Tool | Purpose |
+|------|---------|
+| `shadcn/ui` | Base UI components |
+| `lucide-react` | Icons |
+| `recharts` | Charts & macros |
+
+---
+
+## 🛠️ Development Practices
+
+- All props must be documented and validated
+- Component styles should reference centralized tokens
+- Avoid ad-hoc styles unless justified
+
+---
+
+## 📂 Future Enhancements
+
+- Tokenize all color/spacing into global CSS vars
+- Add animation support via `framer-motion`
+- Improve mobile-first breakpoints and accessibility
+
