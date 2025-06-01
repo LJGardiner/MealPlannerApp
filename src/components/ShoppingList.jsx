@@ -38,7 +38,7 @@ export default function ShoppingList() {
       slotKeys.forEach(slot => {
         const mealId = dayPlan?.[slot];
         if (!mealId) return;
-        const meal = meals.find(m => m.id === Number(mealId));
+        const meal = meals.find(m => m.id === mealId); // ✅ fixed from Number(mealId)
         if (!meal) return;
         meal.components.forEach(comp => {
           if (comp.type === "ingredient") {
@@ -55,7 +55,7 @@ export default function ShoppingList() {
 
   const grouped = {};
   Object.entries(totals).forEach(([id, grams]) => {
-    const ing = ingredients.find(i => i.id === Number(id));
+    const ing = ingredients.find(i => i.id === id);
     if (!ing) return;
     if (!grouped[ing.category]) grouped[ing.category] = [];
     grouped[ing.category].push({
@@ -87,8 +87,8 @@ export default function ShoppingList() {
                   <tr key={item.id}>
                     <td className="border border-border dark:border-border-dark p-2">{item.name}</td>
                     <td className="border border-border dark:border-border-dark p-2 text-right">{item.totalGrams.toFixed(0)}g</td>
-                    <td className="border border-border dark:border-border-dark p-2 text-right">£{item.pricePer100g.toFixed(2)}</td>
-                    <td className="border border-border dark:border-border-dark p-2 text-right">£{((item.totalGrams / 100) * item.pricePer100g).toFixed(2)}</td>
+                    <td className="border border-border dark:border-border-dark p-2 text-right">£{(item.pricePer100g ?? 0).toFixed(2)}</td>
+                    <td className="border border-border dark:border-border-dark p-2 text-right">£{((item.totalGrams / 100) * (item.pricePer100g ?? 0)).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -96,11 +96,11 @@ export default function ShoppingList() {
           </div>
         ))
       )}
-    
+
       <div className="mt-6 text-right text-lg font-semibold">
         Total Estimated Cost: £{
           Object.values(grouped).flat().reduce((sum, item) =>
-            sum + ((item.totalGrams / 100) * item.pricePer100g), 0
+            sum + ((item.totalGrams / 100) * (item.pricePer100g ?? 0)), 0
           ).toFixed(2)
         }
       </div>
