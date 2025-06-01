@@ -1,7 +1,7 @@
-import { ingredients } from "../data/ingredients";
-import { recipes } from "../data/recipes";
+import ingredients from "../data/ingredients";
+import recipes from "../data/recipes";
 
-// Calculate total macros and weight for a recipe
+// Compute macros for a recipe
 function computeRecipeMacros(recipe) {
   const totalMacros = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
   let totalWeight = 0;
@@ -24,48 +24,28 @@ function computeRecipeMacros(recipe) {
 export function computeMealMacros(meal) {
   const totals = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
 
-  for (const comp of meal.components) {
-    const grams = comp.quantityGrams;
+  if (!meal?.components || !Array.isArray(meal.components)) return totals;
+
+  meal.components.forEach((comp) => {
+    const grams = comp.quantityGrams || 0;
+    let source;
 
     if (comp.type === "ingredient") {
-      const ing = ingredients[comp.id];
-      if (!ing) continue;
+      source = ingredients[comp.id];
+      if (!source || !source.macrosPer100g) return;
       for (const key in totals) {
-        totals[key] += (ing.macrosPer100g[key] || 0) * grams / 100;
+        totals[key] += (source.macrosPer100g[key] || 0) * grams / 100;
       }
-    }
-
-    if (comp.type === "recipe") {
-      const recipe = recipes[comp.id];
-      if (!recipe) continue;
-      const { totalMacros, totalWeight } = computeRecipeMacros(recipe);
+    } else if (comp.type === "recipe") {
+      source = recipes[comp.id];
+      if (!source || !source.ingredients) return;
+      const { totalMacros, totalWeight } = computeRecipeMacros(source);
       const scale = grams / totalWeight;
       for (const key in totals) {
         totals[key] += totalMacros[key] * scale;
       }
     }
-  }
+  });
 
   return totals;
-}
-
-export function computePlannerMacroSumsByDay(planner) {
-  const result = {};
-
-  for (const day in planner) {
-    const meals = planner[day];
-    const dayTotals = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
-
-    for (const meal of meals) {
-      if (!meal) continue;
-      const mealMacros = computeMealMacros(meal);
-      for (const key in dayTotals) {
-        dayTotals[key] += mealMacros[key] || 0;
-      }
-    }
-
-    result[day] = dayTotals;
-  }
-
-  return result;
 }

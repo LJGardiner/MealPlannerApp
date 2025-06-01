@@ -3,21 +3,26 @@ import { loadMacroTargets } from "./dataLoader.js";
 function sumMealMacros(meal, recipes, ingredients) {
   const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
 
+  // Defensive check: ensure meal and components exist and are arrays
+  if (!meal || !Array.isArray(meal.components)) {
+    return total;
+  }
+
   meal.components.forEach(({ type, id, quantityGrams }) => {
     if (type === "ingredient") {
       const ing = ingredients.find(i => i.id === id);
-      if (!ing) return;
+      if (!ing || !ing.macrosPer100g) return;
       const ratio = quantityGrams / 100;
       Object.entries(ing.macrosPer100g).forEach(([k, v]) => {
         total[k] += v * ratio;
       });
     } else if (type === "recipe") {
       const recipe = recipes.find(r => r.id === id);
-      if (!recipe) return;
+      if (!recipe || !Array.isArray(recipe.ingredients)) return;
       const totalWeight = recipe.ingredients.reduce((sum, i) => sum + i.quantityGrams, 0);
       recipe.ingredients.forEach(({ ingredientId, quantityGrams: q }) => {
         const ing = ingredients.find(i => i.id === ingredientId);
-        if (!ing) return;
+        if (!ing || !ing.macrosPer100g) return;
         const scaled = (q / totalWeight) * (quantityGrams / 100);
         Object.entries(ing.macrosPer100g).forEach(([k, v]) => {
           total[k] += v * scaled;
@@ -86,7 +91,7 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
 
         const projected = {};
         for (let k in cumulative) {
-          projected[k] = cumulative[k] + m.macros[k];
+          projected[k] = cumulative[k] + (m.macros[k] || 0);
         }
 
         const score = macroDeviationScore(projected, dayTarget);
@@ -116,7 +121,7 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
         slots.push(best.id);
         used.add(best.id);
         for (let k in cumulative) {
-          cumulative[k] += best.macros[k];
+          cumulative[k] += best.macros[k] || 0;
         }
       }
     }

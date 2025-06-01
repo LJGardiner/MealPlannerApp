@@ -14,16 +14,21 @@ const days = [
 const slots = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner", "Smoothie"];
 
 export default function PlannerGrid({ macroTargets, setMacroTargets }) {
-  const [meals, setMeals] = useState([]);
+  const [meals, setMeals] = useState({});
   const [plan, setPlan] = useState({});
-  const [ingredients, setIngredients] = useState([]);
-  const [recipes, setRecipes] = useState([]);
+  const [ingredients, setIngredients] = useState({});
+  const [recipes, setRecipes] = useState({});
 
   useEffect(() => {
-    setMeals(JSON.parse(localStorage.getItem("meals")) || []);
-    setIngredients(JSON.parse(localStorage.getItem("ingredients")) || []);
-    setRecipes(JSON.parse(localStorage.getItem("recipes")) || []);
-    setPlan(JSON.parse(localStorage.getItem("planner")) || {});
+    const mealsArray = JSON.parse(localStorage.getItem("meals")) || [];
+    const ingredientsArray = JSON.parse(localStorage.getItem("ingredients")) || [];
+    const recipesArray = JSON.parse(localStorage.getItem("recipes")) || [];
+    const plannerData = JSON.parse(localStorage.getItem("planner")) || {};
+
+    setMeals(Object.fromEntries(mealsArray.map(m => [m.id, m])));
+    setIngredients(Object.fromEntries(ingredientsArray.map(i => [i.id, i])));
+    setRecipes(Object.fromEntries(recipesArray.map(r => [r.id, r])));
+    setPlan(plannerData);
   }, []);
 
   const handleSelect = (day, slot, mealId) => {
@@ -39,8 +44,8 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
   };
 
   const calculateMealMacros = (mealId) => {
-    const meal = meals.find(m => m.id === Number(mealId));
-    return meal ? computeMealMacros(meal) : null;
+    const meal = meals[mealId];
+    return meal ? computeMealMacros(meal, ingredients, recipes) : null;
   };
 
   const calculateDayMacros = (dayKey) => {
@@ -52,7 +57,7 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
       const macros = calculateMealMacros(mealId);
       if (macros) {
         Object.entries(macros).forEach(([k, v]) => {
-          total[k] += v;
+          total[k] += typeof v === "number" && !isNaN(v) ? v : 0;
         });
       }
     }
@@ -71,7 +76,7 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
   const renderCell = (dayKey, slot) => {
     const mealId = plan[dayKey]?.[slot] || "";
     const macros = mealId ? calculateMealMacros(mealId) : null;
-    const allowedMeals = meals.filter(m => slotCategories[slot]?.includes(m.category));
+    const allowedMeals = Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category));
 
     return (
       <td key={slot} className="border border-border dark:border-border-dark px-2 py-1 align-top">
@@ -87,20 +92,23 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
         </select>
         {macros && (
           <div className="text-[0.7rem] leading-tight text-gray-600">
-            <div>Cals: {macros.calories.toFixed(0)}</div>
-            <div>P: {macros.protein.toFixed(1)}g C: {macros.carbs.toFixed(1)}g</div>
-            <div>F: {macros.fat.toFixed(1)}g Fbr: {macros.fibre.toFixed(1)}g</div>
+            <div>Cals: {safeVal(macros.calories).toFixed(0)}</div>
+            <div>P: {safeVal(macros.protein).toFixed(1)}g C: {safeVal(macros.carbs).toFixed(1)}g</div>
+            <div>F: {safeVal(macros.fat).toFixed(1)}g Fbr: {safeVal(macros.fibre).toFixed(1)}g</div>
           </div>
         )}
       </td>
     );
   };
 
+  // Helper to safely handle possibly undefined macro values
+  const safeVal = (v) => (typeof v === "number" && !isNaN(v) ? v : 0);
+
   const renderMacros = (macros) => (
     <div className="text-[0.7rem] leading-tight text-gray-600">
-      <div>Cals: {macros.calories.toFixed(0)}</div>
-      <div>P: {macros.protein.toFixed(1)}g C: {macros.carbs.toFixed(1)}g</div>
-      <div>F: {macros.fat.toFixed(1)}g Fbr: {macros.fibre.toFixed(1)}g</div>
+      <div>Cals: {safeVal(macros.calories).toFixed(0)}</div>
+      <div>P: {safeVal(macros.protein).toFixed(1)}g C: {safeVal(macros.carbs).toFixed(1)}g</div>
+      <div>F: {safeVal(macros.fat).toFixed(1)}g Fbr: {safeVal(macros.fibre).toFixed(1)}g</div>
     </div>
   );
 

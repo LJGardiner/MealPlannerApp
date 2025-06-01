@@ -3,7 +3,7 @@ import IngredientEditor from "../components/IngredientEditor";
 import IngredientForm from "../components/IngredientForm";
 import IngredientList from "../components/IngredientList";
 import ImportIngredientFromUrl from "../components/ImportIngredientFromUrl";
-import { ingredients as ingredientSeed } from "../data/ingredients";
+import ingredientSeed from "../data/ingredients";
 
 export default function IngredientApp() {
   const [selected, setSelected] = useState(null);
