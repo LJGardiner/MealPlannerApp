@@ -25,10 +25,20 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const recipesArray = JSON.parse(localStorage.getItem("recipes")) || [];
     const plannerData = JSON.parse(localStorage.getItem("planner")) || {};
 
-    setMeals(Object.fromEntries(mealsArray.map(m => [m.id, m])));
+    const mealsMap = Object.fromEntries(mealsArray.map(m => [m.id, m]));
+    setMeals(mealsMap);
     setIngredients(Object.fromEntries(ingredientsArray.map(i => [i.id, i])));
     setRecipes(Object.fromEntries(recipesArray.map(r => [r.id, r])));
-    setPlan(plannerData);
+
+    const cleaned = {};
+    for (const day in plannerData) {
+      cleaned[day] = {};
+      for (const slot of slots) {
+        const id = plannerData[day]?.[slot];
+        cleaned[day][slot] = mealsMap[id] ? id : "";
+      }
+    }
+    setPlan(cleaned);
   }, []);
 
   const handleSelect = (day, slot, mealId) => {
@@ -44,8 +54,8 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
   };
 
   const calculateMealMacros = (mealId) => {
-    const meal = meals[mealId];
-    return meal ? computeMealMacros(meal, ingredients, recipes) : null;
+    if (!mealId || !meals[mealId]) return null;
+    return computeMealMacros(meals[mealId], ingredients, recipes);
   };
 
   const calculateDayMacros = (dayKey) => {
@@ -53,7 +63,6 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
     for (const slot of slots) {
       const mealId = slotMap[slot];
-      if (!mealId) continue;
       const macros = calculateMealMacros(mealId);
       if (macros) {
         Object.entries(macros).forEach(([k, v]) => {
@@ -65,18 +74,25 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
   };
 
   const slotCategories = {
-    "Breakfast": ["BREAKFAST", "SNACK"],
-    "Snack 1": ["SNACK", "SMOOTHIE"],
-    "Lunch": ["LUNCH", "DINNER"],
-    "Snack 2": ["SNACK", "SMOOTHIE"],
+    "Breakfast": ["BREAKFAST"],
+    "Snack 1": ["SNACK"],
+    "Lunch": ["LUNCH"],
+    "Snack 2": ["SNACK"],
     "Dinner": ["DINNER"],
     "Smoothie": ["SMOOTHIE"]
   };
 
   const renderCell = (dayKey, slot) => {
     const mealId = plan[dayKey]?.[slot] || "";
-    const macros = mealId ? calculateMealMacros(mealId) : null;
-    const allowedMeals = Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category));
+    const macros = calculateMealMacros(mealId);
+
+    const assigned = mealId && meals[mealId] ? [meals[mealId]] : [];
+    const allowedMeals = Array.from(
+      new Map(
+        [...assigned, ...Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category))]
+          .map(m => [m.id, m])
+      ).values()
+    );
 
     return (
       <td key={slot} className="border border-border dark:border-border-dark px-2 py-1 align-top">
@@ -87,7 +103,9 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
         >
           <option value="">--</option>
           {allowedMeals.map(meal => (
-            <option key={meal.id} value={meal.id}>{meal.name}</option>
+            <option key={meal.id} value={meal.id}>
+              {meal.name || `[Missing: ${meal.id}]`}
+            </option>
           ))}
         </select>
         {macros && (
@@ -101,7 +119,6 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     );
   };
 
-  // Helper to safely handle possibly undefined macro values
   const safeVal = (v) => (typeof v === "number" && !isNaN(v) ? v : 0);
 
   const renderMacros = (macros) => (

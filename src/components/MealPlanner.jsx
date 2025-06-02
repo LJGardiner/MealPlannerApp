@@ -76,7 +76,7 @@ export default function MealBuilder({ onSave, selectedMeal }) {
         m.id === mealId ? { id: mealId, name: mealName, category, components } : m
       );
     } else {
-      const newId = allMeals.length > 0 ? Math.max(...allMeals.map(m => m.id)) + 1 : 1;
+      const newId = allMeals.length > 0 ? Math.max(...allMeals.map(m => m.id || 0)) + 1 : 1;
       updated = [...allMeals, { id: newId, name: mealName, category, components }];
     }
 
@@ -110,7 +110,7 @@ export default function MealBuilder({ onSave, selectedMeal }) {
       </select>
       <div className="flex gap-2">
         <select
-          onChange={(e) => addComponent("ingredient", Number(e.target.value))}
+          onChange={(e) => addComponent("ingredient", e.target.value)}
           className="border border-border dark:border-border-dark px-2 py-1 w-1/2"
           defaultValue=""
         >
@@ -121,7 +121,7 @@ export default function MealBuilder({ onSave, selectedMeal }) {
         </select>
 
         <select
-          onChange={(e) => addComponent("recipe", Number(e.target.value))}
+          onChange={(e) => addComponent("recipe", e.target.value)}
           className="border border-border dark:border-border-dark px-2 py-1 w-1/2"
           defaultValue=""
         >
@@ -179,13 +179,13 @@ export default function MealBuilder({ onSave, selectedMeal }) {
 MealBuilder.propTypes = {
   onSave: PropTypes.func,
   selectedMeal: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     name: PropTypes.string,
     category: PropTypes.string,
     components: PropTypes.arrayOf(
       PropTypes.shape({
         type: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
         quantityGrams: PropTypes.number.isRequired,
       })
     ),
