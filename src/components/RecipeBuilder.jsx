@@ -92,7 +92,7 @@ export default function RecipeBuilder({ onSave, selectedRecipe }) {
       />
 
       <select
-        onChange={(e) => addComponent(Number(e.target.value))}
+        onChange={(e) => addComponent(e.target.value)}
         className="border border-border-default px-2 py-1 w-full"
         defaultValue=""
       >
@@ -139,7 +139,7 @@ RecipeBuilder.propTypes = {
     name: PropTypes.string,
     components: PropTypes.arrayOf(
       PropTypes.shape({
-        ingredientId: PropTypes.number.isRequired,
+        ingredientId: PropTypes.string.isRequired,
         quantityGrams: PropTypes.number.isRequired,
       })
     ),
