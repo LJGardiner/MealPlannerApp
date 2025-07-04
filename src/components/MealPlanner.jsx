@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const categoryOptions = ["BREAKFAST", "LUNCH", "DINNER", "SNACK", "SMOOTHIE"];
 
-export default function MealBuilder({ onSave, selectedMeal }) {
+export default function MealPlanner({ onSave, selectedMeal }) {
   const [mealName, setMealName] = useState("");
   const [category, setCategory] = useState("");
   const [recipes, setRecipes] = useState([]);
@@ -176,7 +176,7 @@ export default function MealBuilder({ onSave, selectedMeal }) {
   );
 }
 
-MealBuilder.propTypes = {
+MealPlanner.propTypes = {
   onSave: PropTypes.func,
   selectedMeal: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
