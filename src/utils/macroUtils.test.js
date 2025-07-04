@@ -63,4 +63,19 @@ describe('computeMealMacros', () => {
     expect(macros.fat).toBe(0);
     expect(macros.fibre).toBe(0);
   });
+
+  it('ignores unknown ingredients when computing macros', () => {
+    const meal = {
+      components: [
+        { type: 'ingredient', id: 'mystery_item', quantityGrams: 50 },
+        { type: 'ingredient', id: 'chicken_breast', quantityGrams: 100 }
+      ]
+    };
+    const macros = computeMealMacros(meal, ingredients, {});
+    expect(macros.calories).toBeCloseTo(165);
+    expect(macros.protein).toBeCloseTo(31);
+    expect(macros.carbs).toBe(0);
+    expect(macros.fat).toBeCloseTo(3.6);
+    expect(macros.fibre).toBe(0);
+  });
 });
