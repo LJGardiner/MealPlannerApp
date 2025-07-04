@@ -5,8 +5,6 @@ import { autoGeneratePlan } from "../utils/autoPlanner.mjs";
 export default function AutoPlannerButton({ onRefresh }) {
   const handleClick = () => {
     try {
-      const macroTargets = JSON.parse(localStorage.getItem("macroTargets") || "{}");
-
       const mealsRaw = JSON.parse(localStorage.getItem("meals") || "[]");
       const recipesRaw = JSON.parse(localStorage.getItem("recipes") || "[]");
       const ingredientsRaw = JSON.parse(localStorage.getItem("ingredients") || "[]");

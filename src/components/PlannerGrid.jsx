@@ -13,7 +13,7 @@ const days = [
 
 const slots = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner", "Smoothie"];
 
-export default function PlannerGrid({ macroTargets, setMacroTargets }) {
+export default function PlannerGrid({ macroTargets }) {
   const [meals, setMeals] = useState({});
   const [plan, setPlan] = useState({});
   const [ingredients, setIngredients] = useState({});
