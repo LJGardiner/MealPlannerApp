@@ -26,7 +26,7 @@ It is optimized for performance, maintainability, and a polished UI/UX using Tai
 - **User Control First:** Manual planning supported from day one, automation added incrementally.
 - **Visual Feedback:** Macro totals, gaps, and overages are clearly displayed.
 - **Client-Side Persistence:** All user data is stored via `localStorage`.
-- **Trackable Progress:** Development is organized using `roadmap.md`.
+- **Trackable Progress:** Development is organized using `roadmap`.
 
 ---
 
@@ -125,7 +125,7 @@ npm run dev
 
 ## 🎨 UI Conventions
 
-Defined in [`style_guide.md`](./documentation/style_guide.md):
+Defined in [`style_guide`](./documentation/style_guide):
 
 - Consistent Tailwind-based spacing, typography, and themes
 - Responsive layout with light/dark mode support
@@ -136,7 +136,7 @@ Defined in [`style_guide.md`](./documentation/style_guide.md):
 
 ## 📅 Project Roadmap & Status
 
-Development is tracked in [`roadmap.md`](./documentation/roadmap.md), organized by phase and task codes. Tasks are marked as ✅ when complete and 🔄 when active.
+Development is tracked in [`roadmap`](./documentation/roadmap), organized by phase and task codes. Tasks are marked as ✅ when complete and 🔄 when active.
 
 Phases include:
 1. Setup (✅)
