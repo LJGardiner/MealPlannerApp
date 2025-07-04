@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const slots = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner"];
+const slots = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner", "Smoothie"];
 
 export default function PlannerMacroSummary() {
   const [planner, setPlanner] = useState({});
@@ -18,7 +18,7 @@ export default function PlannerMacroSummary() {
   }, []);
 
   const calculateMealMacros = (mealId) => {
-    const meal = meals.find(m => m.id === Number(mealId));
+    const meal = meals.find(m => m.id === mealId);
     if (!meal) return null;
 
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
