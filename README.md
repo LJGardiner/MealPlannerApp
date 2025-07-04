@@ -170,4 +170,4 @@ Contributions welcome! Fork, feature branch, and submit a PR. Ensure all PRs:
 
 ## 📄 License
 
-MIT License. See `LICENSE.md` for full terms.
+MIT License. See [LICENSE.md](LICENSE.md) for full terms.
