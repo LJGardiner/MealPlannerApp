@@ -93,7 +93,7 @@ export default function RecipeBuilder({ onSave, selectedRecipe }) {
 
       <select
         onChange={(e) => addComponent(Number(e.target.value))}
-        className="border border-border dark:border-border-dark px-2 py-1 w-full"
+        className="border border-border-default px-2 py-1 w-full"
         defaultValue=""
       >
         <option value="" disabled>Add Ingredient</option>
@@ -105,15 +105,15 @@ export default function RecipeBuilder({ onSave, selectedRecipe }) {
       {components.map((comp, index) => {
         const source = ingredients.find(i => i.id === comp.ingredientId);
         return (
-          <div key={index} className="border border-border dark:border-border-dark p-2 rounded">
+          <div key={index} className="border border-border-default p-2 rounded">
             <div className="flex justify-between items-center mb-2">
               <strong>{source?.name || "Unknown Ingredient"}</strong>
-              <button
+              <Button
                 onClick={() => removeComponent(index)}
                 className="bg-red-500 text-white px-2 py-1 rounded"
               >
                 Remove
-              </button>
+              </Button>
             </div>
             <Input
               type="number"

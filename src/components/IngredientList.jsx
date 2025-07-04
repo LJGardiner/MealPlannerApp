@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 export default function IngredientList({ onEdit, refreshKey }) {
   const [ingredients, setIngredients] = useState([]);
@@ -30,7 +31,7 @@ export default function IngredientList({ onEdit, refreshKey }) {
       {ingredients.length === 0 ? (
         <p>No ingredients found.</p>
       ) : (
-        <table className="w-full border border-border dark:border-border-dark">
+        <table className="w-full border border-border-default">
           <thead>
             <tr>
               <th className="border p-2">Name</th>
@@ -54,14 +55,14 @@ export default function IngredientList({ onEdit, refreshKey }) {
                     : "No macros"}
                 </td>
                 <td className="border p-2 space-x-2">
-                  <button
+                  <Button
                     className="bg-yellow-400 px-2 py-1 rounded"
                     onClick={() => onEdit(ingredient)}
-                  >Edit</button>
-                  <button
+                  >Edit</Button>
+                  <Button
                     className="bg-red-500 text-white px-2 py-1 rounded"
                     onClick={() => handleDelete(ingredient.id)}
-                  >Delete</button>
+                  >Delete</Button>
                 </td>
               </tr>
             ))}

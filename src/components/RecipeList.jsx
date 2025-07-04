@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "./ui/button";
 
 export default function RecipeList({ recipes, ingredients, onEdit }) {
   // Return loading state if recipes or ingredients props are missing
@@ -52,23 +53,23 @@ export default function RecipeList({ recipes, ingredients, onEdit }) {
           return (
             <div
               key={recipe.id}
-              className="border border-border dark:border-border-dark rounded p-4"
+              className="border border-border-default rounded p-4"
             >
               <div className="flex justify-between mb-2">
                 <h3 className="text-lg font-bold">{recipe.name}</h3>
                 <div className="space-x-2">
-                  <button
+                  <Button
                     onClick={() => onEdit?.(recipe)}
                     className="bg-yellow-400 px-3 py-1 rounded"
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => deleteRecipe(recipe.id)}
                     className="bg-red-500 text-white px-3 py-1 rounded"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </div>
               <p className="text-sm mb-1">Total weight: {totalWeight}g</p>

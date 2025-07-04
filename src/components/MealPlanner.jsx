@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 const categoryOptions = ["BREAKFAST", "LUNCH", "DINNER", "SNACK", "SMOOTHIE"];
 
@@ -91,17 +93,17 @@ export default function MealPlanner({ onSave, selectedMeal }) {
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-bold">{mealId ? "Edit Meal" : "Create Meal"}</h2>
-      <input
+      <Input
         type="text"
         placeholder="Meal name"
         value={mealName}
         onChange={(e) => setMealName(e.target.value)}
-        className="border border-border dark:border-border-dark px-2 py-1 w-full"
+        className="w-full border-border-default"
       />
       <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        className="border border-border dark:border-border-dark px-2 py-1 w-full"
+        className="border border-border-default px-2 py-1 w-full"
       >
         <option value="" disabled>Select Category</option>
         {categoryOptions.map(opt => (
@@ -111,7 +113,7 @@ export default function MealPlanner({ onSave, selectedMeal }) {
       <div className="flex gap-2">
         <select
           onChange={(e) => addComponent("ingredient", e.target.value)}
-          className="border border-border dark:border-border-dark px-2 py-1 w-1/2"
+          className="border border-border-default px-2 py-1 w-1/2"
           defaultValue=""
         >
           <option value="" disabled>Add Ingredient</option>
@@ -122,7 +124,7 @@ export default function MealPlanner({ onSave, selectedMeal }) {
 
         <select
           onChange={(e) => addComponent("recipe", e.target.value)}
-          className="border border-border dark:border-border-dark px-2 py-1 w-1/2"
+          className="border border-border-default px-2 py-1 w-1/2"
           defaultValue=""
         >
           <option value="" disabled>Add Recipe</option>
@@ -138,7 +140,7 @@ export default function MealPlanner({ onSave, selectedMeal }) {
           : recipes.find(r => r.id === comp.id);
 
         return (
-          <div key={index} className="border border-border dark:border-border-dark p-2 rounded">
+          <div key={index} className="border border-border-default p-2 rounded">
             <div className="flex justify-between items-center mb-2">
               <strong>
                 {source?.name
@@ -148,30 +150,27 @@ export default function MealPlanner({ onSave, selectedMeal }) {
                     : "Unknown Recipe"}
                 ({comp.type})
               </strong>
-              <button
+              <Button
                 onClick={() => removeComponent(index)}
                 className="bg-red-500 text-white px-2 py-1 rounded"
               >
                 Remove
-              </button>
+              </Button>
             </div>
-            <input
+            <Input
               type="number"
               value={comp.quantityGrams}
               onChange={(e) => updateQuantity(index, Number(e.target.value))}
-              className="border border-border dark:border-border-dark px-2 py-1 w-full"
+              className="w-full border-border-default"
               placeholder="Quantity (g)"
             />
           </div>
         );
       })}
 
-      <button
-        onClick={handleSave}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
+      <Button onClick={handleSave} className="bg-blue-600 text-white">
         {mealId ? "Update Meal" : "Save Meal"}
-      </button>
+      </Button>
     </div>
   );
 }

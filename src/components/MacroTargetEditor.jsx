@@ -29,24 +29,24 @@ export default function MacroTargetEditor({ macroTargets, setMacroTargets }) {
   return (
     <div className="my-6">
       <h2 className="text-xl font-bold mb-2">Edit Macro Targets</h2>
-      <table className="min-w-full border border-border dark:border-border-dark text-sm">
+      <table className="min-w-full border border-border-default text-sm">
         <thead>
           <tr>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Day</th>
+            <th className="border border-border-default px-2 py-1">Day</th>
             {fields.map(field => (
-              <th key={field} className="border border-border dark:border-border-dark px-2 py-1 capitalize">{field}</th>
+              <th key={field} className="border border-border-default px-2 py-1 capitalize">{field}</th>
             ))}
           </tr>
         </thead>
         <tbody>
           {days.map(day => (
             <tr key={day}>
-              <td className="border border-border dark:border-border-dark px-2 py-1 font-semibold capitalize">{day}</td>
+              <td className="border border-border-default px-2 py-1 font-semibold capitalize">{day}</td>
               {fields.map(field => (
-                <td key={field} className="border border-border dark:border-border-dark px-2 py-1">
-                  <input
+                <td key={field} className="border border-border-default px-2 py-1">
+                  <Input
                     type="number"
-                    className="w-full px-1 py-0.5 border border-border dark:border-border-dark"
+                    className="w-full border-border-default px-1 py-0.5"
                     value={macroTargets?.[day]?.[field] ?? ""}
                     onChange={(e) => handleChange(day, field, e.target.value)}
                   />

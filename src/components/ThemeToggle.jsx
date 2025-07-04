@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Switch } from "./ui/switch";
 
 export default function ThemeToggle() {
   const [enabled, setEnabled] = useState(() => {
@@ -19,9 +20,8 @@ export default function ThemeToggle() {
   return (
     <div className="flex items-center gap-2">
       <label htmlFor="theme-toggle">Dark Mode</label>
-      <input
+      <Switch
         id="theme-toggle"
-        type="checkbox"
         checked={enabled}
         onChange={() => setEnabled(!enabled)}
       />
