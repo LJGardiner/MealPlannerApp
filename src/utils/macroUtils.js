@@ -38,6 +38,7 @@ export function computeMealMacros(meal, ingredients, recipes, portion = 1.0) {
       source = recipes[comp.id];
       if (!source || !source.ingredients) return;
       const { totalMacros, totalWeight } = computeRecipeMacros(source, ingredients);
+      if (totalWeight <= 0) return;
       const recipeScale = grams / totalWeight;
       for (const key in totals) {
         totals[key] += totalMacros[key] * recipeScale;

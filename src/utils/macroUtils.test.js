@@ -47,4 +47,20 @@ describe('computeMealMacros', () => {
     expect(macros.fat).toBeCloseTo(3.7);
     expect(macros.fibre).toBe(0);
   });
+
+  it('returns zero macros for an empty recipe', () => {
+    const emptyRecipe = { id: 'empty', ingredients: [] };
+    const recipes = { empty: emptyRecipe };
+    const meal = {
+      components: [
+        { type: 'recipe', id: 'empty', quantityGrams: 100 }
+      ]
+    };
+    const macros = computeMealMacros(meal, ingredients, recipes);
+    expect(macros.calories).toBe(0);
+    expect(macros.protein).toBe(0);
+    expect(macros.carbs).toBe(0);
+    expect(macros.fat).toBe(0);
+    expect(macros.fibre).toBe(0);
+  });
 });
