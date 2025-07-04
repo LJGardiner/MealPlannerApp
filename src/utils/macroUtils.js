@@ -1,8 +1,5 @@
-import ingredients from "../data/ingredients";
-import recipes from "../data/recipes";
-
 // Compute macros for a recipe
-function computeRecipeMacros(recipe) {
+export function computeRecipeMacros(recipe, ingredients) {
   const totalMacros = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
   let totalWeight = 0;
 
@@ -21,13 +18,14 @@ function computeRecipeMacros(recipe) {
 }
 
 // Compute macros for a meal
-export function computeMealMacros(meal) {
+export function computeMealMacros(meal, ingredients, recipes, portion = 1.0) {
   const totals = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
 
   if (!meal?.components || !Array.isArray(meal.components)) return totals;
+  const scale = typeof portion === "number" && !isNaN(portion) ? portion : 1.0;
 
   meal.components.forEach((comp) => {
-    const grams = comp.quantityGrams || 0;
+    const grams = (comp.quantityGrams || 0) * scale;
     let source;
 
     if (comp.type === "ingredient") {
@@ -39,10 +37,10 @@ export function computeMealMacros(meal) {
     } else if (comp.type === "recipe") {
       source = recipes[comp.id];
       if (!source || !source.ingredients) return;
-      const { totalMacros, totalWeight } = computeRecipeMacros(source);
-      const scale = grams / totalWeight;
+      const { totalMacros, totalWeight } = computeRecipeMacros(source, ingredients);
+      const recipeScale = grams / totalWeight;
       for (const key in totals) {
-        totals[key] += totalMacros[key] * scale;
+        totals[key] += totalMacros[key] * recipeScale;
       }
     }
   });

@@ -1,3 +1,44 @@
+import { loadMacroTargets } from "./dataLoader";
+
+function sumMealMacros(meal, recipes, ingredients) {
+  const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
+
+  meal.components.forEach(({ type, id, quantityGrams }) => {
+    if (type === "ingredient") {
+      const ing = ingredients.find(i => i.id === id);
+      if (!ing) return;
+      const ratio = quantityGrams / 100;
+      Object.entries(ing.macrosPer100g).forEach(([k, v]) => {
+        total[k] += v * ratio;
+      });
+    } else if (type === "recipe") {
+      const recipe = recipes.find(r => r.id === id);
+      if (!recipe) return;
+      const totalWeight = recipe.ingredients.reduce((sum, i) => sum + i.quantityGrams, 0);
+      recipe.ingredients.forEach(({ ingredientId, quantityGrams: q }) => {
+        const ing = ingredients.find(i => i.id === ingredientId);
+        if (!ing) return;
+        const scaled = (q / totalWeight) * (quantityGrams / 100);
+        Object.entries(ing.macrosPer100g).forEach(([k, v]) => {
+          total[k] += v * scaled;
+        });
+      });
+    }
+  });
+
+  return total;
+}
+
+function macroDeviationScore(projected, target) {
+  const weights = { calories: 1.5, protein: 2, carbs: 1, fat: 1, fibre: 1 };
+  let score = 0;
+  for (let k in target) {
+    const delta = Math.abs(target[k] - projected[k]);
+    score += weights[k] * delta;
+  }
+  return score;
+}
+
 export function autoGeneratePlan(meals, recipes, ingredients) {
   const targets = loadMacroTargets() || {};
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
@@ -25,15 +66,15 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
 
     const slotKeys = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner", "Smoothie"];
     const slotCategories = {
-      "Breakfast": ["BREAKFAST"],
-      "Snack 1": ["SNACK"],
-      "Lunch": ["LUNCH"],
-      "Snack 2": ["SNACK"],
+      "Breakfast": ["BREAKFAST", "SNACK"],
+      "Snack 1": ["SNACK", "SMOOTHIE"],
+      "Lunch": ["LUNCH", "DINNER"],
+      "Snack 2": ["SNACK", "SMOOTHIE"],
       "Dinner": ["DINNER"],
       "Smoothie": ["SMOOTHIE"]
     };
 
-    for (let slot = 0; slot < slotKeys.length; slot++) {
+    for (let slot = 0; slot < 6; slot++) {
       const slotKey = slotKeys[slot];
       const allowedCategories = slotCategories[slotKey];
 
@@ -47,7 +88,9 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
           m.macros.calories > dayTarget.calories * 1.5 ||
           m.macros.protein > dayTarget.protein * 1.5 ||
           m.macros.fat > dayTarget.fat * 1.5
-        ) continue;
+        ) {
+          continue;
+        }
 
         const projected = {};
         for (let k in cumulative) {
@@ -61,6 +104,7 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
       if (candidates.length > 0) {
         candidates.sort((a, b) => a.score - b.score);
         const top = candidates.slice(0, 8);
+
         const weights = top.map(c => 1 / (c.score + 0.001));
         const totalWeight = weights.reduce((a, b) => a + b, 0);
         const rand = Math.random() * totalWeight;
@@ -76,39 +120,25 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
         }
 
         const best = chosen;
-        slots.push(best.id);
+        slots.push({ id: best.id, portion: 1 }); // 🟢 Use full object format
         used.add(best.id);
         for (let k in cumulative) {
           cumulative[k] += best.macros[k];
         }
       } else {
-        const fallback = getFallbackMeal(allowedCategories, used, mealData);
-        const fallbackId = fallback || meals[0]?.id || null;
-
-        if (!fallbackId) {
-          console.warn(`⚠️ No fallback meal found for slot "${slotKey}" on ${day}`);
-        }
-
-        slots.push(fallbackId);
-        if (fallbackId) used.add(fallbackId);
+        slots.push(null);
       }
     }
 
     plan[day] = {
-      "Breakfast": slots[0] || null,
-      "Snack 1": slots[1] || null,
-      "Lunch": slots[2] || null,
-      "Snack 2": slots[3] || null,
-      "Dinner": slots[4] || null,
-      "Smoothie": slots[5] || null
+      "Breakfast": slots[0],
+      "Snack 1": slots[1],
+      "Lunch": slots[2],
+      "Snack 2": slots[3],
+      "Dinner": slots[4],
+      "Smoothie": slots[5]
     };
   }
 
   return plan;
-}
-
-function getFallbackMeal(categories, usedSet, meals) {
-  const valid = meals.filter(m => categories.includes(m.category));
-  const unused = valid.find(m => !usedSet.has(m.id));
-  return (unused || valid[0])?.id || null;
 }

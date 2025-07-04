@@ -25,20 +25,10 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const recipesArray = JSON.parse(localStorage.getItem("recipes")) || [];
     const plannerData = JSON.parse(localStorage.getItem("planner")) || {};
 
-    const mealsMap = Object.fromEntries(mealsArray.map(m => [m.id, m]));
-    setMeals(mealsMap);
+    setMeals(Object.fromEntries(mealsArray.map(m => [m.id, m])));
     setIngredients(Object.fromEntries(ingredientsArray.map(i => [i.id, i])));
     setRecipes(Object.fromEntries(recipesArray.map(r => [r.id, r])));
-
-    const cleaned = {};
-    for (const day in plannerData) {
-      cleaned[day] = {};
-      for (const slot of slots) {
-        const id = plannerData[day]?.[slot];
-        cleaned[day][slot] = mealsMap[id] ? id : "";
-      }
-    }
-    setPlan(cleaned);
+    setPlan(plannerData);
   }, []);
 
   const handleSelect = (day, slot, mealId) => {
@@ -53,17 +43,20 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     localStorage.setItem("planner", JSON.stringify(updated));
   };
 
-  const calculateMealMacros = (mealId) => {
-    if (!mealId || !meals[mealId]) return null;
-    return computeMealMacros(meals[mealId], ingredients, recipes);
+  const calculateMealMacros = (mealId, portion = 1) => {
+    const meal = meals[mealId];
+    return meal ? computeMealMacros(meal, ingredients, recipes, portion) : null;
   };
 
   const calculateDayMacros = (dayKey) => {
     const slotMap = plan[dayKey] || {};
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
     for (const slot of slots) {
-      const mealId = slotMap[slot];
-      const macros = calculateMealMacros(mealId);
+      const slotData = slotMap[slot];
+      const mealId = typeof slotData === "object" ? slotData.id : slotData;
+      const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+      if (!mealId) continue;
+      const macros = calculateMealMacros(mealId, portion);
       if (macros) {
         Object.entries(macros).forEach(([k, v]) => {
           total[k] += typeof v === "number" && !isNaN(v) ? v : 0;
@@ -82,78 +75,73 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     "Smoothie": ["SMOOTHIE"]
   };
 
-  const renderCell = (dayKey, slot) => {
-    const mealId = plan[dayKey]?.[slot] || "";
-    const macros = calculateMealMacros(mealId);
-
-    const assigned = mealId && meals[mealId] ? [meals[mealId]] : [];
-    const allowedMeals = Array.from(
-      new Map(
-        [...assigned, ...Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category))]
-          .map(m => [m.id, m])
-      ).values()
-    );
-
-    return (
-      <td key={slot} className="border border-border dark:border-border-dark px-2 py-1 align-top">
-        <select
-          value={mealId}
-          onChange={(e) => handleSelect(dayKey, slot, e.target.value)}
-          className="w-full border border-border dark:border-border-dark px-1 py-0.5 mb-1"
-        >
-          <option value="">--</option>
-          {allowedMeals.map(meal => (
-            <option key={meal.id} value={meal.id}>
-              {meal.name || `[Missing: ${meal.id}]`}
-            </option>
-          ))}
-        </select>
-        {macros && (
-          <div className="text-[0.7rem] leading-tight text-gray-600">
-            <div>Cals: {safeVal(macros.calories).toFixed(0)}</div>
-            <div>P: {safeVal(macros.protein).toFixed(1)}g C: {safeVal(macros.carbs).toFixed(1)}g</div>
-            <div>F: {safeVal(macros.fat).toFixed(1)}g Fbr: {safeVal(macros.fibre).toFixed(1)}g</div>
-          </div>
-        )}
-      </td>
-    );
-  };
-
   const safeVal = (v) => (typeof v === "number" && !isNaN(v) ? v : 0);
 
   const renderMacros = (macros) => (
-    <div className="text-[0.7rem] leading-tight text-gray-600">
+    <div className="text-xs font-mono leading-tight text-gray-700 dark:text-gray-300">
       <div>Cals: {safeVal(macros.calories).toFixed(0)}</div>
       <div>P: {safeVal(macros.protein).toFixed(1)}g C: {safeVal(macros.carbs).toFixed(1)}g</div>
       <div>F: {safeVal(macros.fat).toFixed(1)}g Fbr: {safeVal(macros.fibre).toFixed(1)}g</div>
     </div>
   );
 
+  const renderCell = (dayKey, slot, rowIndex, colIndex) => {
+    const slotData = plan[dayKey]?.[slot] || "";
+    const mealId = typeof slotData === "object" ? slotData.id : slotData;
+    const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+    const macros = mealId ? calculateMealMacros(mealId, portion) : null;
+    const allowedMeals = Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category));
+    const bgColor = (rowIndex + colIndex) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]";
+
+    return (
+      <td key={slot} className={`border border-border dark:border-border-dark px-2 py-2 align-top ${bgColor}`}>
+        <select
+          value={mealId}
+          onChange={(e) => handleSelect(dayKey, slot, { id: e.target.value, portion: 1 })}
+          className="w-full border border-border dark:border-border-dark px-1 py-0.5 text-sm rounded-md mb-1"
+        >
+          <option value="">--</option>
+          {allowedMeals.map(meal => (
+            <option key={meal.id} value={meal.id}>
+              {meal.name}{portion !== 1 ? ` ×${portion}` : ""}
+            </option>
+          ))}
+        </select>
+        {macros && (
+          <>
+            <div className="text-xs font-semibold text-gray-800 dark:text-gray-200 mb-0.5">
+              Portion: ×{portion.toFixed(1)}
+            </div>
+            {renderMacros(macros)}
+          </>
+        )}
+      </td>
+    );
+  };
+
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full border border-border dark:border-border-dark text-sm mb-6">
-        <thead>
+      <table className="min-w-full border border-border dark:border-border-dark text-sm mb-6 table-fixed">
+        <thead className="bg-muted/10 dark:bg-muted/20">
           <tr>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Day / Slot</th>
+            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left w-28">Day / Slot</th>
             {slots.map(slot => (
-              <th key={slot} className="border border-border dark:border-border-dark px-2 py-1">{slot}</th>
+              <th key={slot} className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">{slot}</th>
             ))}
-            <th className="border border-border dark:border-border-dark px-2 py-1">Total Macros</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Goal Macros</th>
+            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">Total Macros</th>
+            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">Goal Macros</th>
           </tr>
         </thead>
         <tbody>
-          {days.map(({ key, label }) => {
+          {days.map(({ key, label }, rowIndex) => {
             const actual = calculateDayMacros(key);
-            const goal = macroTargets?.[key] || {
-              calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0
-            };
+            const goal = macroTargets?.[key] || { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
             return (
               <tr key={key}>
-                <td className="border border-border dark:border-border-dark px-2 py-1 font-semibold align-top">{label}</td>
-                {slots.map(slot => renderCell(key, slot))}
-                <td className="border border-border dark:border-border-dark px-2 py-1">{renderMacros(actual)}</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{renderMacros(goal)}</td>
+                <td className={`border border-border dark:border-border-dark px-2 py-2 font-semibold align-top sticky left-0 z-10 bg-[var(--card)] dark:bg-[var(--card)]`}>{label}</td>
+                {slots.map((slot, colIndex) => renderCell(key, slot, rowIndex, colIndex))}
+                <td className={`border border-border dark:border-border-dark px-2 py-2 ${(rowIndex + slots.length) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]"}`}>{renderMacros(actual)}</td>
+                <td className={`border border-border dark:border-border-dark px-2 py-2 ${(rowIndex + slots.length + 1) % 2 === 0 ? "bg-[var(--card)]" : "bg-[var(--background)]"}`}>{renderMacros(goal)}</td>
               </tr>
             );
           })}
