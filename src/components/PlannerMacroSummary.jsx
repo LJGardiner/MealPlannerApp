@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const slots = ["Breakfast", "Snack 1", "Lunch", "Snack 2", "Dinner", "Smoothie"];
 
 export default function PlannerMacroSummary() {
   const [planner, setPlanner] = useState({});
