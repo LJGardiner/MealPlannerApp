@@ -116,7 +116,7 @@ npm run dev
 
 ### 🛠 Dependencies
 - React 18+
-- TailwindCSS (via PostCSS pipeline)
+- Tailwind CSS (via PostCSS pipeline)
 - `shadcn/ui` for base components
 - `lucide-react` for icons
 - `recharts` for macro visualizations
