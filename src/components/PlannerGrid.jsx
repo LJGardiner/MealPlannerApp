@@ -53,8 +53,8 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
     for (const slot of slots) {
       const slotData = slotMap[slot];
-      const mealId = typeof slotData === "object" ? slotData.id : slotData;
-      const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+      const mealId = slotData && typeof slotData === "object" ? slotData.id : slotData;
+      const portion = slotData && typeof slotData === "object" ? slotData.portion || 1 : 1;
       if (!mealId) continue;
       const macros = calculateMealMacros(mealId, portion);
       if (macros) {
@@ -87,8 +87,8 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
 
   const renderCell = (dayKey, slot, rowIndex, colIndex) => {
     const slotData = plan[dayKey]?.[slot] || "";
-    const mealId = typeof slotData === "object" ? slotData.id : slotData;
-    const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+    const mealId = slotData && typeof slotData === "object" ? slotData.id : slotData;
+    const portion = slotData && typeof slotData === "object" ? slotData.portion || 1 : 1;
     const macros = mealId ? calculateMealMacros(mealId, portion) : null;
     const allowedMeals = Object.values(meals).filter(m => slotCategories[slot]?.includes(m.category));
     const bgColor = (rowIndex + colIndex) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]";

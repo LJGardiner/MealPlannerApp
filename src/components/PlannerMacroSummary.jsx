@@ -57,9 +57,9 @@ export default function PlannerMacroSummary() {
     const slotsForDay = planner[day] || {};
 
     Object.values(slotsForDay).forEach(slotData => {
-      const mealId = typeof slotData === "object" ? slotData.id : slotData;
-      const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
-      const macros = calculateMealMacros(mealId, portion);
+      const mealId = slotData && typeof slotData === "object" ? slotData.id : slotData;
+      const portion = slotData && typeof slotData === "object" ? slotData.portion || 1 : 1;
+      const macros = mealId ? calculateMealMacros(mealId, portion) : null;
       if (!macros) return;
       Object.entries(macros).forEach(([k, v]) => total[k] += v);
     });
