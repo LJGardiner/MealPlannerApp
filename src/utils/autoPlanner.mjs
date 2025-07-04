@@ -118,21 +118,28 @@ export function autoGeneratePlan(meals, recipes, ingredients) {
 
         const best = chosen;
 
-        slots.push(best.id);
+        slots.push({ id: best.id, portion: 1 });
         used.add(best.id);
         for (let k in cumulative) {
           cumulative[k] += best.macros[k] || 0;
+        }
+      } else {
+        const fallback = mealData.find(m =>
+          allowedCategories.includes(m.category)
+        );
+        if (fallback) {
+          slots.push({ id: fallback.id, portion: 1 });
         }
       }
     }
 
     plan[day] = {
-      "Breakfast": slots[0] || null,
-      "Snack 1": slots[1] || null,
-      "Lunch": slots[2] || null,
-      "Snack 2": slots[3] || null,
-      "Dinner": slots[4] || null,
-      "Smoothie": slots[5] || null
+      "Breakfast": slots[0],
+      "Snack 1": slots[1],
+      "Lunch": slots[2],
+      "Snack 2": slots[3],
+      "Dinner": slots[4],
+      "Smoothie": slots[5]
     };
   }
 
