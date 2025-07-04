@@ -67,15 +67,15 @@ export default function PlannerMacroSummary() {
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-2">Macro Summary (per Day)</h2>
-      <table className="min-w-full border border-border dark:border-border-dark text-sm">
+      <table className="min-w-full border border-border-default text-sm">
         <thead>
           <tr>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Day</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Calories</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Protein</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Carbs</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Fat</th>
-            <th className="border border-border dark:border-border-dark px-2 py-1">Fibre</th>
+            <th className="border border-border-default px-2 py-1">Day</th>
+            <th className="border border-border-default px-2 py-1">Calories</th>
+            <th className="border border-border-default px-2 py-1">Protein</th>
+            <th className="border border-border-default px-2 py-1">Carbs</th>
+            <th className="border border-border-default px-2 py-1">Fat</th>
+            <th className="border border-border-default px-2 py-1">Fibre</th>
           </tr>
         </thead>
         <tbody>
@@ -83,12 +83,12 @@ export default function PlannerMacroSummary() {
             const macros = calculateDailyMacros(day);
             return (
               <tr key={day}>
-                <td className="border border-border dark:border-border-dark px-2 py-1 font-semibold">{day}</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{macros.calories.toFixed(0)}</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{macros.protein.toFixed(1)}g</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{macros.carbs.toFixed(1)}g</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{macros.fat.toFixed(1)}g</td>
-                <td className="border border-border dark:border-border-dark px-2 py-1">{macros.fibre.toFixed(1)}g</td>
+                <td className="border border-border-default px-2 py-1 font-semibold">{day}</td>
+                <td className="border border-border-default px-2 py-1">{macros.calories.toFixed(0)}</td>
+                <td className="border border-border-default px-2 py-1">{macros.protein.toFixed(1)}g</td>
+                <td className="border border-border-default px-2 py-1">{macros.carbs.toFixed(1)}g</td>
+                <td className="border border-border-default px-2 py-1">{macros.fat.toFixed(1)}g</td>
+                <td className="border border-border-default px-2 py-1">{macros.fibre.toFixed(1)}g</td>
               </tr>
             );
           })}

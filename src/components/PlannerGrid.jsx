@@ -94,11 +94,11 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const bgColor = (rowIndex + colIndex) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]";
 
     return (
-      <td key={slot} className={`border border-border dark:border-border-dark px-2 py-2 align-top ${bgColor}`}>
+      <td key={slot} className={`border border-border-default px-2 py-2 align-top ${bgColor}`}>
         <select
           value={mealId}
           onChange={(e) => handleSelect(dayKey, slot, { id: e.target.value, portion: 1 })}
-          className="w-full border border-border dark:border-border-dark px-1 py-0.5 text-sm rounded-md mb-1"
+          className="w-full border border-border-default px-1 py-0.5 text-sm rounded-md mb-1"
         >
           <option value="">--</option>
           {allowedMeals.map(meal => (
@@ -121,15 +121,15 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full border border-border dark:border-border-dark text-sm mb-6 table-fixed">
+      <table className="min-w-full border border-border-default text-sm mb-6 table-fixed">
         <thead className="bg-muted/10 dark:bg-muted/20">
           <tr>
-            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left w-28">Day / Slot</th>
+            <th className="border border-border-default px-2 py-2 font-semibold text-left w-28">Day / Slot</th>
             {slots.map(slot => (
-              <th key={slot} className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">{slot}</th>
+              <th key={slot} className="border border-border-default px-2 py-2 font-semibold text-left">{slot}</th>
             ))}
-            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">Total Macros</th>
-            <th className="border border-border dark:border-border-dark px-2 py-2 font-semibold text-left">Goal Macros</th>
+            <th className="border border-border-default px-2 py-2 font-semibold text-left">Total Macros</th>
+            <th className="border border-border-default px-2 py-2 font-semibold text-left">Goal Macros</th>
           </tr>
         </thead>
         <tbody>
@@ -138,10 +138,10 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
             const goal = macroTargets?.[key] || { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
             return (
               <tr key={key}>
-                <td className={`border border-border dark:border-border-dark px-2 py-2 font-semibold align-top sticky left-0 z-10 bg-[var(--card)] dark:bg-[var(--card)]`}>{label}</td>
+                <td className={`border border-border-default px-2 py-2 font-semibold align-top sticky left-0 z-10 bg-[var(--card)]`}>{label}</td>
                 {slots.map((slot, colIndex) => renderCell(key, slot, rowIndex, colIndex))}
-                <td className={`border border-border dark:border-border-dark px-2 py-2 ${(rowIndex + slots.length) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]"}`}>{renderMacros(actual)}</td>
-                <td className={`border border-border dark:border-border-dark px-2 py-2 ${(rowIndex + slots.length + 1) % 2 === 0 ? "bg-[var(--card)]" : "bg-[var(--background)]"}`}>{renderMacros(goal)}</td>
+                <td className={`border border-border-default px-2 py-2 ${(rowIndex + slots.length) % 2 === 0 ? "bg-[var(--background)]" : "bg-[var(--card)]"}`}>{renderMacros(actual)}</td>
+                <td className={`border border-border-default px-2 py-2 ${(rowIndex + slots.length + 1) % 2 === 0 ? "bg-[var(--card)]" : "bg-[var(--background)]"}`}>{renderMacros(goal)}</td>
               </tr>
             );
           })}

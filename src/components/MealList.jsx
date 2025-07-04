@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "./ui/button";
 
 export default function MealList({ meals, recipes, ingredients, onEdit }) {
   if (!meals || !recipes || !ingredients) return <p>Loading...</p>;
@@ -58,7 +59,7 @@ export default function MealList({ meals, recipes, ingredients, onEdit }) {
                   ([k, v]) => `${k}: ${v.toFixed(1)}g `
                 )}
               </p>
-              <button onClick={() => onEdit?.(meal)}>Edit</button>
+              <Button onClick={() => onEdit?.(meal)}>Edit</Button>
             </div>
           );
         })

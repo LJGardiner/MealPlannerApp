@@ -73,22 +73,22 @@ export default function ShoppingList() {
         Object.entries(grouped).map(([category, items]) => (
           <div key={category} className="mb-6">
             <h3 className="text-xl font-semibold mb-2">{category}</h3>
-            <table className="w-full border border-border dark:border-border-dark text-sm">
+            <table className="w-full border border-border-default text-sm">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border border-border dark:border-border-dark p-2 text-left">Ingredient</th>
-                  <th className="border border-border dark:border-border-dark p-2 text-right">Total (g)</th>
-                  <th className="border border-border dark:border-border-dark p-2 text-right">Price/100g</th>
-                  <th className="border border-border dark:border-border-dark p-2 text-right">Est. Cost</th>
+                  <th className="border border-border-default p-2 text-left">Ingredient</th>
+                  <th className="border border-border-default p-2 text-right">Total (g)</th>
+                  <th className="border border-border-default p-2 text-right">Price/100g</th>
+                  <th className="border border-border-default p-2 text-right">Est. Cost</th>
                 </tr>
               </thead>
               <tbody>
                 {items.map(item => (
                   <tr key={item.id}>
-                    <td className="border border-border dark:border-border-dark p-2">{item.name}</td>
-                    <td className="border border-border dark:border-border-dark p-2 text-right">{item.totalGrams.toFixed(0)}g</td>
-                    <td className="border border-border dark:border-border-dark p-2 text-right">£{(item.pricePer100g ?? 0).toFixed(2)}</td>
-                    <td className="border border-border dark:border-border-dark p-2 text-right">£{((item.totalGrams / 100) * (item.pricePer100g ?? 0)).toFixed(2)}</td>
+                    <td className="border border-border-default p-2">{item.name}</td>
+                    <td className="border border-border-default p-2 text-right">{item.totalGrams.toFixed(0)}g</td>
+                    <td className="border border-border-default p-2 text-right">£{(item.pricePer100g ?? 0).toFixed(2)}</td>
+                    <td className="border border-border-default p-2 text-right">£{((item.totalGrams / 100) * (item.pricePer100g ?? 0)).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

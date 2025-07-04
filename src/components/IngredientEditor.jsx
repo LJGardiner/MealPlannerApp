@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function IngredientEditor({ selectedIngredient, onSave }) {
   const [formData, setFormData] = useState(getEmptyForm());
@@ -68,61 +70,49 @@ export default function IngredientEditor({ selectedIngredient, onSave }) {
       <h3 className="text-lg font-semibold mb-2">Edit Ingredient</h3>
 
       <div className="grid grid-cols-2 gap-4">
-        <input
+        <Input
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
-          className="input"
           placeholder="Name"
         />
-        <input
+        <Input
           value={formData.category}
           onChange={(e) => handleChange("category", e.target.value)}
-          className="input"
           placeholder="Category"
         />
-        <input
+        <Input
           type="number"
           value={formData.pricePer100g}
           onChange={(e) => handleChange("pricePer100g", parseFloat(e.target.value) || 0)}
-          className="input"
           placeholder="Price per 100g"
         />
-        <input
+        <Input
           type="number"
           value={formData.macrosPer100g.calories}
           onChange={(e) => handleMacroChange("calories", parseFloat(e.target.value) || 0)}
-          className="input"
           placeholder="Calories"
         />
-        <input
+        <Input
           type="number"
           value={formData.macrosPer100g.protein}
           onChange={(e) => handleMacroChange("protein", parseFloat(e.target.value) || 0)}
-          className="input"
           placeholder="Protein"
         />
-        <input
+        <Input
           type="number"
           value={formData.macrosPer100g.carbs}
           onChange={(e) => handleMacroChange("carbs", parseFloat(e.target.value) || 0)}
-          className="input"
           placeholder="Carbs"
         />
-        <input
+        <Input
           type="number"
           value={formData.macrosPer100g.fat}
           onChange={(e) => handleMacroChange("fat", parseFloat(e.target.value) || 0)}
-          className="input"
           placeholder="Fat"
         />
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className="mt-4 btn bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Save Changes
-      </button>
+      <Button onClick={handleSubmit} className="mt-4">Save Changes</Button>
     </div>
   );
 }

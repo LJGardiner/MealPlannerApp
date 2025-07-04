@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function ImportIngredientFromUrl({ onImport }) {
   const [url, setUrl] = useState("");
@@ -35,20 +37,16 @@ export default function ImportIngredientFromUrl({ onImport }) {
 
   return (
     <div className="flex items-center gap-2">
-      <input
+      <Input
         type="text"
         placeholder="Paste Waitrose ingredient link"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        className="input w-full"
+        className="w-full"
       />
-      <button
-        className="btn"
-        onClick={handleImport}
-        disabled={loading}
-      >
+      <Button onClick={handleImport} disabled={loading}>
         {loading ? "Importing..." : "Import"}
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function IngredientForm({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -62,87 +64,82 @@ export default function IngredientForm({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 border p-4 rounded bg-white dark:bg-gray-900">
+    <form onSubmit={handleSubmit} className="space-y-4 border border-border-default p-4 rounded bg-card">
       <h3 className="text-lg font-semibold">Add Ingredient Manually</h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Name</label>
-          <input
+          <Input
             type="text"
             value={formData.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Category</label>
-          <input
+          <Input
             type="text"
             value={formData.category}
             onChange={(e) => handleChange("category", e.target.value)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Price per 100g (£)</label>
-          <input
+          <Input
             type="number"
             value={formData.pricePer100g}
             onChange={(e) => handleChange("pricePer100g", parseFloat(e.target.value) || 0)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Calories</label>
-          <input
+          <Input
             type="number"
             value={formData.macrosPer100g.calories}
             onChange={(e) => handleMacroChange("calories", parseFloat(e.target.value) || 0)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Protein (g)</label>
-          <input
+          <Input
             type="number"
             value={formData.macrosPer100g.protein}
             onChange={(e) => handleMacroChange("protein", parseFloat(e.target.value) || 0)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Carbohydrates (g)</label>
-          <input
+          <Input
             type="number"
             value={formData.macrosPer100g.carbs}
             onChange={(e) => handleMacroChange("carbs", parseFloat(e.target.value) || 0)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Fat (g)</label>
-          <input
+          <Input
             type="number"
             value={formData.macrosPer100g.fat}
             onChange={(e) => handleMacroChange("fat", parseFloat(e.target.value) || 0)}
-            className="input w-full"
+            className="w-full"
           />
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="btn bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Add Ingredient
-      </button>
+      <Button type="submit">Add Ingredient</Button>
     </form>
   );
 }
