@@ -52,9 +52,9 @@ export default function PlannerGrid({ macroTargets, setMacroTargets }) {
     const slotMap = plan[dayKey] || {};
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
     for (const slot of slots) {
-      const slotData = slotMap[slot];
-      const mealId = typeof slotData === "object" ? slotData.id : slotData;
-      const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+    const slotData = slotMap[slot];
+    const mealId = slotData && typeof slotData === "object" ? slotData.id : slotData;
+    const portion = slotData && typeof slotData === "object" ? slotData.portion || 1 : 1;
       if (!mealId) continue;
       const macros = calculateMealMacros(mealId, portion);
       if (macros) {
