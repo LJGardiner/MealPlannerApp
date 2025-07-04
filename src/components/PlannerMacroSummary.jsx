@@ -17,13 +17,14 @@ export default function PlannerMacroSummary() {
     setRecipes(JSON.parse(localStorage.getItem("recipes")) || []);
   }, []);
 
-  const calculateMealMacros = (mealId) => {
+  const calculateMealMacros = (mealId, portion = 1) => {
     const meal = meals.find(m => m.id === mealId);
     if (!meal) return null;
 
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
 
     meal.components.forEach(({ type, id, quantityGrams }) => {
+      const grams = (quantityGrams || 0) * portion;
       const source = type === "ingredient"
         ? ingredients.find(i => i.id === id)
         : recipes.find(r => r.id === id);
@@ -31,7 +32,7 @@ export default function PlannerMacroSummary() {
       if (!source) return;
 
       if (type === "ingredient") {
-        const ratio = quantityGrams / 100;
+        const ratio = grams / 100;
         Object.entries(source.macrosPer100g).forEach(([k, v]) => {
           total[k] += v * ratio;
         });
@@ -39,7 +40,7 @@ export default function PlannerMacroSummary() {
         source.ingredients.forEach(({ ingredientId, quantityGrams: q }) => {
           const ing = ingredients.find(i => i.id === ingredientId);
           if (ing) {
-            const scaled = (q * quantityGrams) / 10000; // scale to recipe ratio
+            const scaled = (q * grams) / 10000; // scale to recipe ratio
             Object.entries(ing.macrosPer100g).forEach(([k, v]) => {
               total[k] += v * scaled;
             });
@@ -55,8 +56,10 @@ export default function PlannerMacroSummary() {
     const total = { calories: 0, protein: 0, carbs: 0, fat: 0, fibre: 0 };
     const slotsForDay = planner[day] || {};
 
-    Object.values(slotsForDay).forEach(mealId => {
-      const macros = calculateMealMacros(mealId);
+    Object.values(slotsForDay).forEach(slotData => {
+      const mealId = typeof slotData === "object" ? slotData.id : slotData;
+      const portion = typeof slotData === "object" ? slotData.portion || 1 : 1;
+      const macros = calculateMealMacros(mealId, portion);
       if (!macros) return;
       Object.entries(macros).forEach(([k, v]) => total[k] += v);
     });
